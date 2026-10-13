@@ -14,11 +14,11 @@ class DataManager:
 
     def get_movies(self, user_id) -> list[Movie]:
         stmt = (
-            select(Movie)
+            select(Movie, UserFavorite.custom_title)
             .join(UserFavorite, Movie.id == UserFavorite.movie_id)
             .where(UserFavorite.user_id == user_id)
         )
-        return db.session.scalars(stmt).all()
+        return db.session.execute(stmt).all()
 
     def add_movie(self, user_id: int, movie: Movie) -> None:
         with db.session.begin():
@@ -41,7 +41,7 @@ class DataManager:
         db.session.add(movie)
         db.session.flush()
 
-    def _add_favorite_movie(self, user_id, movie_id) -> None:
+    def _add_favorite_movie(self, user_id: int, movie_id: int) -> None:
         new_favorite = UserFavorite(
             user_id=user_id,
             movie_id=movie_id
@@ -52,14 +52,14 @@ class DataManager:
         stmt = select(UserFavorite).where(UserFavorite.user_id == user_id).where(UserFavorite.movie_id == movie_id)
         return db.session.scalars(stmt).one_or_none()
 
-    def update_movie(self, movie_id: int, user_id: int, new_title: str) -> None:
+    def update_movie(self, user_id: int, movie_id: int, new_title: str) -> None:
         with db.session.begin():
             custom_movie = self._get_favorite_movie(user_id, movie_id)
             if not custom_movie:
                 return
             custom_movie.custom_title = new_title
 
-    def delete_movie(self, movie_id: int, user_id: int) -> None:
+    def delete_movie(self, user_id: int, movie_id: int) -> None:
         with db.session.begin():
             delete_movie = self._get_favorite_movie(user_id, movie_id)
             if not delete_movie:

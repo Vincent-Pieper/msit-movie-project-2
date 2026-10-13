@@ -31,6 +31,9 @@ class Movie(db.Model):
 
     user_favorites: Mapped[list[UserFavorite]] = relationship(back_populates="movie")
 
+    def __str__(self) -> str:
+        return f"{self.title} ({self.year}) by {self.director}"
+
 
 class UserFavorite(db.Model):
     __tablename__ = "user_favorites"
