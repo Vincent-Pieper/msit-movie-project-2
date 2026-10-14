@@ -1,19 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}Error - MoviWebApp{% endblock %}
+{% block title %}Error | MoviWebApp{% endblock %}
 
 {% block content %}
 
-<section class="panel error-page">
+<section class="error-state">
+
+    <div class="error-icon">
+        !
+    </div>
+
     <h1>Something went wrong</h1>
 
     <p>
         {{ message }}
     </p>
 
-    <a href="{{ url_for('home') }}" class="text-link">
+    <a
+        href="{{ url_for('home') }}"
+        class="button button-primary"
+    >
         Back to home
     </a>
+
 </section>
 
 {% endblock %}

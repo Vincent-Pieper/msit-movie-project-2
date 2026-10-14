@@ -1,52 +1,79 @@
 {% extends "base.html" %}
 
-{% block title %}Movie Search - MoviWebApp{% endblock %}
+{% block title %}Search Results | MoviWebApp{% endblock %}
 
 {% block content %}
 
-<section class="page-header">
-    <h1>Search Results</h1>
+<section class="page-heading">
+
+    <div>
+        <p class="eyebrow">OMDB</p>
+        <h1>Search Results</h1>
+
+        <p class="subtitle">
+            Choose the movie you meant.
+        </p>
+    </div>
 
     <a
-        href="{{ url_for('get_user_favorite_movies', user_id=user_id) }}"
-        class="text-link"
+        href="{{ url_for(
+            'get_user_favorite_movies',
+            user_id=user_id
+        ) }}"
+        class="button button-secondary"
     >
-        Back to favorites
+        ← Back to favorites
     </a>
+
 </section>
 
-<section class="movie-grid">
+
+<section class="search-result-list">
 
     {% for movie in movies %}
 
-        <article class="movie-card">
+        <article class="search-result">
 
-            {% if movie.Poster and movie.Poster != "N/A" %}
-                <img
-                    src="{{ movie.Poster }}"
-                    alt="Poster for {{ movie.Title }}"
-                    class="movie-poster"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
+            <div class="search-poster">
 
-                <div class="poster-placeholder poster-fallback">
-                    No poster available
+                {% if movie.Poster and movie.Poster != "N/A" %}
+
+                    <img
+                        src="{{ movie.Poster }}"
+                        alt="Poster for {{ movie.Title }}"
+                        onerror="
+                            this.style.display='none';
+                            this.nextElementSibling.style.display='flex';
+                        "
+                    >
+
+                    <div class="poster-placeholder poster-fallback">
+                        No poster
+                    </div>
+
+                {% else %}
+
+                    <div class="poster-placeholder">
+                        No poster
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="search-result-content">
+
+                <div>
+                    <p class="movie-year">
+                        {{ movie.Year }}
+                    </p>
+
+                    <h2>
+                        {{ movie.Title }}
+                    </h2>
                 </div>
 
-            {% else %}
-                <div class="poster-placeholder">
-                    No poster available
-                </div>
-            {% endif %}
-
-            <div class="movie-content">
-
-                <h2>{{ movie.Title }}</h2>
-
-                <p>
-                    <strong>Year:</strong>
-                    {{ movie.Year }}
-                </p>
 
                 <form
                     action="{{ url_for(
@@ -55,6 +82,7 @@
                     ) }}"
                     method="post"
                 >
+
                     <input
                         type="hidden"
                         name="final_imdb_id"
@@ -63,9 +91,11 @@
 
                     <button
                         type="submit"
+                        class="button button-primary"
                     >
-                        Add to Favorites
+                        + Add to Favorites
                     </button>
+
                 </form>
 
             </div>

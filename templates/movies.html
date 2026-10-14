@@ -1,40 +1,59 @@
 {% extends "base.html" %}
 
-{% block title %}Favorite Movies - MoviWebApp{% endblock %}
+{% block title %}Favorites | MoviWebApp{% endblock %}
 
 {% block content %}
 
-<section class="page-header">
-    <h1>Favorite Movies</h1>
+<section class="page-heading">
 
-    <a href="{{ url_for('home') }}" class="text-link">
-        Back to users
+    <div>
+        <p class="eyebrow">YOUR COLLECTION</p>
+        <h1>Favorite Movies</h1>
+    </div>
+
+    <a
+        href="{{ url_for('home') }}"
+        class="button button-secondary"
+    >
+        ← Back to users
     </a>
+
 </section>
 
-<section class="panel">
-    <h2>Add Movie</h2>
+
+<section class="panel search-panel">
+
+    <div>
+        <p class="eyebrow">OMDB SEARCH</p>
+        <h2>Add another movie</h2>
+    </div>
 
     <form
-        action="{{ url_for('find_movies', user_id=user_id) }}"
+        action="{{ url_for(
+            'find_movies',
+            user_id=user_id
+        ) }}"
         method="post"
-        class="form"
+        class="horizontal-form"
     >
-        <label for="movie">Movie title</label>
-
         <input
             type="text"
-            id="movie"
             name="movie"
-            placeholder="Search for a movie"
+            placeholder="Search for a movie..."
             required
         >
 
-        <button type="submit">
-            Search OMDb
+        <button
+            type="submit"
+            class="button button-primary"
+        >
+            Search
         </button>
+
     </form>
+
 </section>
+
 
 <section class="movie-grid">
 
@@ -44,85 +63,139 @@
 
         <article class="movie-card">
 
-            {% if movie.poster_url and movie.poster_url != "N/A" %}
-                <img
-                    src="{{ movie.poster_url }}"
-                    alt="Poster for {{ display_title }}"
-                    class="movie-poster"
-                >
-            {% else %}
-                <div class="poster-placeholder">
-                    No poster available
-                </div>
-            {% endif %}
+            <div class="poster-wrapper">
+
+                {% if movie.poster_url and movie.poster_url != "N/A" %}
+
+                    <img
+                        src="{{ movie.poster_url }}"
+                        alt="Poster for {{ display_title }}"
+                        class="movie-poster"
+                        onerror="
+                            this.style.display='none';
+                            this.nextElementSibling.style.display='flex';
+                        "
+                    >
+
+                    <div class="poster-placeholder poster-fallback">
+                        No poster available
+                    </div>
+
+                {% else %}
+
+                    <div class="poster-placeholder">
+                        No poster available
+                    </div>
+
+                {% endif %}
+
+            </div>
+
 
             <div class="movie-content">
 
-                <h2>{{ display_title }}</h2>
+                <div class="movie-heading">
+
+                    <div>
+                        <p class="movie-year">
+                            {{ movie.year }}
+                        </p>
+
+                        <h2>
+                            {{ display_title }}
+                        </h2>
+                    </div>
+
+                </div>
+
 
                 {% if custom_title %}
-                    <p class="movie-original-title">
-                        Original title: {{ movie.title }}
+
+                    <p class="original-title">
+                        Original: {{ movie.title }}
                     </p>
+
                 {% endif %}
 
-                <p>
-                    <strong>Year:</strong>
-                    {{ movie.year }}
-                </p>
 
                 {% if movie.director %}
-                    <p>
-                        <strong>Director:</strong>
-                        {{ movie.director }}
+
+                    <p class="movie-meta">
+                        Directed by {{ movie.director }}
                     </p>
+
                 {% endif %}
 
-                <form
-                    action="{{ url_for(
-                        'update_personal_movie_title',
-                        user_id=user_id,
-                        movie_id=movie.id
-                    ) }}"
-                    method="post"
-                    class="form inline-form"
-                >
-                    <input
-                        type="text"
-                        name="custom_title"
-                        value="{{ custom_title or '' }}"
-                        placeholder="{{ movie.title }}"
-                        required
+
+                <div class="movie-actions">
+
+                    <form
+                        action="{{ url_for(
+                            'update_personal_movie_title',
+                            user_id=user_id,
+                            movie_id=movie.id
+                        ) }}"
+                        method="post"
+                        class="rename-form"
                     >
 
-                    <button type="submit">
-                        Update Title
-                    </button>
-                </form>
+                        <input
+                            type="text"
+                            name="custom_title"
+                            value="{{ custom_title or '' }}"
+                            placeholder="{{ movie.title }}"
+                            required
+                        >
 
-                <form
-                    action="{{ url_for(
-                        'delete_personal_movie',
-                        user_id=user_id,
-                        movie_id=movie.id
-                    ) }}"
-                    method="post"
-                >
-                    <button
-                        type="submit"
-                        class="danger-button"
+                        <button
+                            type="submit"
+                            class="button button-secondary"
+                        >
+                            Rename
+                        </button>
+
+                    </form>
+
+
+                    <form
+                        action="{{ url_for(
+                            'delete_personal_movie',
+                            user_id=user_id,
+                            movie_id=movie.id
+                        ) }}"
+                        method="post"
                     >
-                        Remove
-                    </button>
-                </form>
+
+                        <button
+                            type="submit"
+                            class="button button-danger"
+                        >
+                            Remove
+                        </button>
+
+                    </form>
+
+                </div>
 
             </div>
+
         </article>
+
 
     {% else %}
 
-        <div class="panel">
-            <p>This user has no favorite movies yet.</p>
+        <div class="empty-state large-empty-state">
+
+            <div class="empty-icon">
+                🎞️
+            </div>
+
+            <h2>No favorite movies yet</h2>
+
+            <p>
+                Search OMDb above and add your first movie.
+            </p>
+
         </div>
 
     {% endfor %}

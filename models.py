@@ -8,6 +8,7 @@ db = SQLAlchemy()
 
 
 class User(db.Model):
+    """Represent a user of the MoviWeb application."""
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -17,6 +18,7 @@ class User(db.Model):
 
 
 class Movie(db.Model):
+    """Represent a canonical movie stored in the database."""
     __tablename__ = "movies"
 
     __table_args__ = (
@@ -32,10 +34,12 @@ class Movie(db.Model):
     user_favorites: Mapped[list[UserFavorite]] = relationship(back_populates="movie")
 
     def __str__(self) -> str:
+        """Return a human-readable representation of the movie."""
         return f"{self.title} ({self.year}) by {self.director}"
 
 
 class UserFavorite(db.Model):
+    """Represent a user's favorite movie and user-specific movie data."""
     __tablename__ = "user_favorites"
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)

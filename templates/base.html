@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}MoviWebApp{% endblock %}</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}MoviWebApp{% endblock %}
+    </title>
 
     <link
         rel="stylesheet"
@@ -13,21 +20,56 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="container header-content">
-            <a href="{{ url_for('home') }}" class="brand">
-                MoviWebApp
+
+<header class="site-header">
+    <div class="container navbar">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+        >
+            <span class="brand-icon">🎬</span>
+            MoviWebApp
+        </a>
+
+        <nav>
+            <a
+                href="{{ url_for('home') }}"
+                class="nav-link"
+            >
+                Users
             </a>
+        </nav>
 
-            <nav>
-                <a href="{{ url_for('home') }}">Users</a>
-            </nav>
-        </div>
-    </header>
+    </div>
+</header>
 
-    <main class="container">
-        {% block content %}
-        {% endblock %}
-    </main>
+
+<main class="container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+
+            <div class="flash-container">
+
+                {% for category, message in messages %}
+
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+    {% endwith %}
+
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
 </body>
 </html>

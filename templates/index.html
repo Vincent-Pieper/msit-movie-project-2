@@ -1,55 +1,85 @@
 {% extends "base.html" %}
 
-{% block title %}Users - MoviWebApp{% endblock %}
+{% block title %}Users | MoviWebApp{% endblock %}
 
 {% block content %}
 
-<section class="page-header">
-    <h1>Users</h1>
-    <p>Select a user to view their favorite movies.</p>
+<section class="hero">
+    <p class="eyebrow">MOVIE COLLECTION</p>
+
+    <h1>Who's watching?</h1>
+
+    <p class="subtitle">
+        Select a user to explore their favorite movies.
+    </p>
 </section>
 
-<section class="panel">
-    {% if users %}
-        <ul class="user-list">
-            {% for user in users %}
-                <li>
-                    <a
-                        href="{{ url_for('get_user_favorite_movies', user_id=user.id) }}"
-                        class="user-link"
-                    >
-                        {{ user.name }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
+
+<section class="user-grid">
+
+    {% for user in users %}
+
+        <a
+            href="{{ url_for(
+                'get_user_favorite_movies',
+                user_id=user.id
+            ) }}"
+            class="user-card"
+        >
+            <div class="user-avatar">
+                {{ user.name[0] | upper }}
+            </div>
+
+            <h2>{{ user.name }}</h2>
+
+            <span class="card-action">
+                View favorites →
+            </span>
+        </a>
+
     {% else %}
-        <p>No users have been added yet.</p>
-    {% endif %}
+
+        <div class="empty-state">
+            <h2>No users yet</h2>
+
+            <p>
+                Create the first user to start a movie collection.
+            </p>
+        </div>
+
+    {% endfor %}
+
 </section>
 
-<section class="panel">
-    <h2>Add User</h2>
+
+<section class="panel add-user-panel">
+
+    <div>
+        <p class="eyebrow">NEW PROFILE</p>
+        <h2>Add User</h2>
+    </div>
 
     <form
         action="{{ url_for('create_user') }}"
         method="post"
-        class="form"
+        class="horizontal-form"
     >
-        <label for="user_name">Name</label>
-
         <input
             type="text"
-            id="user_name"
             name="user_name"
             placeholder="Enter user name"
             required
         >
 
-        <button type="submit">
+        <button
+            type="submit"
+            class="button button-primary"
+        >
             Add User
         </button>
+
     </form>
+
 </section>
 
 {% endblock %}
