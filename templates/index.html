@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Users - MoviWebApp{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+    <h1>Users</h1>
+    <p>Select a user to view their favorite movies.</p>
+</section>
+
+<section class="panel">
+    {% if users %}
+        <ul class="user-list">
+            {% for user in users %}
+                <li>
+                    <a
+                        href="{{ url_for('get_user_favorite_movies', user_id=user.id) }}"
+                        class="user-link"
+                    >
+                        {{ user.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users have been added yet.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <h2>Add User</h2>
+
+    <form
+        action="{{ url_for('create_user') }}"
+        method="post"
+        class="form"
+    >
+        <label for="user_name">Name</label>
+
+        <input
+            type="text"
+            id="user_name"
+            name="user_name"
+            placeholder="Enter user name"
+            required
+        >
+
+        <button type="submit">
+            Add User
+        </button>
+    </form>
+</section>
+
+{% endblock %}

@@ -31,7 +31,6 @@ class DataManager:
             if not favorite_exists:
                 self._add_favorite_movie(user_id, movie_id)
 
-
     def get_movie(self, title: str, year: int) -> Movie | None:
         stmt = select(Movie).where(Movie.title == title).where(Movie.year == year)
         movie = db.session.scalars(stmt).one_or_none()
